@@ -131,6 +131,8 @@ int main(int, char**)
         {
             static float f = 0.0f;
             static int counter = 0;
+            static int counter2 = 0;
+            static int counter3 = 0;
 
             ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
@@ -145,6 +147,16 @@ int main(int, char**)
                 counter++;
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
+
+            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+                counter2++;
+            ImGui::SameLine();
+            ImGui::Text("counter2 = %d", counter2);
+
+            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+                counter3++;
+            ImGui::SameLine();
+            ImGui::Text("counter3 = %d", counter3);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
