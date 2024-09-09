@@ -546,7 +546,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
             ImGui::SeparatorText("Debug");
             ImGui::Checkbox("io.ConfigDebugIsDebuggerPresent", &io.ConfigDebugIsDebuggerPresent);
             ImGui::SameLine(); HelpMarker("Enable various tools calling IM_DEBUG_BREAK().\n\nRequires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.");
-            ImGui::Checkbox("io.ConfigDebugDetectDuplicateId", &io.ConfigDebugDetectDuplicateId);
+            ImGui::Checkbox("io.ConfigDebugDetectIdConflicts", &io.ConfigDebugDetectIdConflicts);
             ImGui::SameLine(); HelpMarker("Show an error message when multiple items have conflicting identifiers.");
             ImGui::BeginDisabled();
             ImGui::Checkbox("io.ConfigDebugBeginReturnValueOnce", &io.ConfigDebugBeginReturnValueOnce);
