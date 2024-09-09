@@ -1395,6 +1395,8 @@ ImGuiIO::ImGuiIO()
     ConfigWindowsResizeFromEdges = true;
     ConfigWindowsMoveFromTitleBarOnly = false;
     ConfigMemoryCompactTimer = 60.0f;
+    ConfigDebugIsDebuggerPresent = false;
+    ConfigDebugDetectDuplicateId = true;
     ConfigDebugBeginReturnValueOnce = false;
     ConfigDebugBeginReturnValueLoop = false;
 
@@ -4294,11 +4296,10 @@ bool ImGui::ItemHoverable(const ImRect& bb, ImGuiID id, ImGuiItemFlags item_flag
     // Detect ID conflicts
 #ifndef IMGUI_DISABLE_DEBUG_TOOLS
     if (id != 0 && g.HoveredIdPreviousFrame == id && (item_flags & ImGuiItemFlags_AllowDuplicateId) == 0)
-        g.HoveredIdPreviousFrameItemCount++;
-    if (id != 0 && g.DebugDuplicateId == id && (item_flags & ImGuiItemFlags_AllowDuplicateId) == 0)
     {
-        SetTooltip("Duplicate ID detected!");
-        GetForegroundDrawList()->AddRect(bb.Min, bb.Max, IM_COL32(255, 0, 0, 255), 0.0f, ImDrawFlags_None, 2.0f);
+        g.HoveredIdPreviousFrameItemCount++;
+        if (g.DebugDuplicateId == id)
+            window->DrawList->AddRect(bb.Min - ImVec2(1,1), bb.Max + ImVec2(1,1), IM_COL32(255, 0, 0, 255), 0.0f, ImDrawFlags_None, 2.0f);
     }
 #endif
 
@@ -4845,8 +4846,12 @@ void ImGui::NewFrame()
     if (g.DragDropActive && g.DragDropPayload.SourceId == g.ActiveId)
         KeepAliveID(g.DragDropPayload.SourceId);
 
+    // [DEBUG]
+    g.DebugDuplicateId = 0;
+    if (g.IO.ConfigDebugDetectDuplicateId && g.HoveredIdPreviousFrameItemCount > 1)
+        g.DebugDuplicateId = g.HoveredIdPreviousFrame;
+
     // Update HoveredId data
-    g.DebugDuplicateId = (g.HoveredIdPreviousFrameItemCount > 1) ? g.HoveredIdPreviousFrame : 0;
     if (!g.HoveredIdPreviousFrame)
         g.HoveredIdTimer = 0.0f;
     if (!g.HoveredIdPreviousFrame || (g.HoveredId && g.ActiveId == g.HoveredId))
@@ -5248,6 +5253,24 @@ void ImGui::EndFrame()
     if (g.FrameCountEnded == g.FrameCount)
         return;
     IM_ASSERT(g.WithinFrameScope && "Forgot to call ImGui::NewFrame()?");
+
+#ifndef IMGUI_DISABLE_DEBUG_TOOLS
+    if (g.DebugDuplicateId)
+    {
+        if (g.DebugItemPickerActive == false)
+        {
+            BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None);
+            Text("%d items with conflicting identifier!", g.HoveredIdPreviousFrameItemCount);
+            BulletText("Append \"##xx\" to identifiers or use PushID()/PopID() mechanisms to disambiguate identifiers.");
+            BulletText("Read \"FAQ -> About the ID Stack System\" for details.");
+            BulletText("Set io.ConfigDebugDetectDuplicateId=false to disable this warning in non-programmers builds.");
+            BulletText("Press CTRL+P to activate Item Picker and break in item callstack");
+            EndTooltip();
+        }
+        if (Shortcut(ImGuiMod_Ctrl | ImGuiKey_P, ImGuiInputFlags_RouteGlobal))
+            DebugStartItemPicker();
+    }
+#endif
 
     CallContextHooks(&g, ImGuiContextHookType_EndFramePre);
 
