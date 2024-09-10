@@ -5257,10 +5257,9 @@ void ImGui::EndFrame()
 #ifndef IMGUI_DISABLE_DEBUG_TOOLS
     if (g.DebugDrawIdConflicts != 0)
     {
-        if (g.DebugItemPickerActive == false)
+        PushStyleColor(ImGuiCol_PopupBg, ImLerp(g.Style.Colors[ImGuiCol_PopupBg], ImVec4(1.0f, 0.0f, 0.0f, 1.0f), 0.10f));
+        if (g.DebugItemPickerActive == false && BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None))
         {
-            PushStyleColor(ImGuiCol_PopupBg, ImLerp(g.Style.Colors[ImGuiCol_PopupBg], ImVec4(1.0f, 0.0f, 0.0f, 1.0f), 0.10f));
-            BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None);
             SeparatorText("MESSAGE FROM DEAR IMGUI");
             Text("Programmer error: %d visible items with conflicting ID!", g.HoveredIdPreviousFrameItemCount);
             BulletText("Code should use PushID()/PopID() in loops, or append \"##xx\" to empty or same-label identifiers.");
@@ -5268,8 +5267,8 @@ void ImGui::EndFrame()
             BulletText("Press CTRL+P to activate Item Picker and debug-break in item call-stack.");
             BulletText("Set io.ConfigDebugDetectIdConflicts=false to disable this warning in non-programmers builds.");
             EndTooltip();
-            PopStyleColor();
         }
+        PopStyleColor();
         if (Shortcut(ImGuiMod_Ctrl | ImGuiKey_P, ImGuiInputFlags_RouteGlobal))
             DebugStartItemPicker();
         if (Shortcut(ImGuiKey_F1, ImGuiInputFlags_RouteGlobal) && g.PlatformIO.Platform_OpenInShellFn != NULL)
