@@ -1396,7 +1396,7 @@ ImGuiIO::ImGuiIO()
     ConfigWindowsMoveFromTitleBarOnly = false;
     ConfigMemoryCompactTimer = 60.0f;
     ConfigDebugIsDebuggerPresent = false;
-    ConfigDebugDetectIdConflicts = true;
+    ConfigDebugHighlightIdConflicts = true;
     ConfigDebugBeginReturnValueOnce = false;
     ConfigDebugBeginReturnValueLoop = false;
 
@@ -4848,7 +4848,7 @@ void ImGui::NewFrame()
 
     // [DEBUG]
     g.DebugDrawIdConflicts = 0;
-    if (g.IO.ConfigDebugDetectIdConflicts && g.HoveredIdPreviousFrameItemCount > 1)
+    if (g.IO.ConfigDebugHighlightIdConflicts && g.HoveredIdPreviousFrameItemCount > 1)
         g.DebugDrawIdConflicts = g.HoveredIdPreviousFrame;
 
     // Update HoveredId data
@@ -5262,9 +5262,8 @@ void ImGui::EndFrame()
             PushStyleColor(ImGuiCol_PopupBg, ImLerp(g.Style.Colors[ImGuiCol_PopupBg], ImVec4(1.0f, 0.0f, 0.0f, 1.0f), 0.10f));
             BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None);
             SeparatorText("MESSAGE FROM DEAR IMGUI");
-            Text("%d+ items with conflicting ID!", g.HoveredIdPreviousFrameItemCount);
-            BulletText("This is a programmer error!");
-            BulletText("Append \"##xx\" to identifiers or use PushID()/PopID() mechanisms to disambiguate ID.");
+            Text("Programmer error: %d visible items with conflicting ID!", g.HoveredIdPreviousFrameItemCount);
+            BulletText("Code should use PushID()/PopID() in loops, or append \"##xx\" to same label identifiers.");
             BulletText("Press F1 to open \"FAQ -> About the ID Stack System\" and read details.");
             BulletText("Press CTRL+P to activate Item Picker and debug-break in item call-stack.");
             BulletText("Set io.ConfigDebugDetectIdConflicts=false to disable this warning in non-programmers builds.");
