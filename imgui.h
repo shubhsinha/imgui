@@ -2271,7 +2271,7 @@ struct ImGuiIO
     bool        ConfigDebugIsDebuggerPresent;   // = false          // Enable various tools calling IM_DEBUG_BREAK().
 
     // Tools to detect code submitting items with conflicting/duplicate IDs
-    // - Code should use PushID()/PopID() in loops, or append "##xx" to same label identifiers.
+    // - Code should use PushID()/PopID() in loops, or append "##xx" to empty or same-label identifiers.
     // - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
     bool        ConfigDebugHighlightIdConflicts;// = true           // Highlight and show an error message when multiple items have conflicting identifiers.
 

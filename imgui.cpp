@@ -5263,7 +5263,7 @@ void ImGui::EndFrame()
             BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None);
             SeparatorText("MESSAGE FROM DEAR IMGUI");
             Text("Programmer error: %d visible items with conflicting ID!", g.HoveredIdPreviousFrameItemCount);
-            BulletText("Code should use PushID()/PopID() in loops, or append \"##xx\" to same label identifiers.");
+            BulletText("Code should use PushID()/PopID() in loops, or append \"##xx\" to empty or same-label identifiers.");
             BulletText("Press F1 to open \"FAQ -> About the ID Stack System\" and read details.");
             BulletText("Press CTRL+P to activate Item Picker and debug-break in item call-stack.");
             BulletText("Set io.ConfigDebugDetectIdConflicts=false to disable this warning in non-programmers builds.");
